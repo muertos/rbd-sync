@@ -1,7 +1,7 @@
 # RBD Sync
 Migrates or synchronizes RBD images, including snapshots, between two Ceph clusters for a specific pool.
 - `--export`: Snapshots source image and exports all snapshots of image into destination.
-- `--sync`: Transfers only the differences between the source and destination images.
+- `--sync`: Transfers only the differences between the source and destination images. Will fail if `--export` has not been used initially.
 
 Only boot a VM with the migrated volume after performing a sync of the RBD image data, otherwise the filesystem may be corrupt resulting in a VM that does not boot.
 
