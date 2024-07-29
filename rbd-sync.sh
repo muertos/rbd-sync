@@ -68,7 +68,7 @@ function export_rbd_image() {
     first_snapshot=$(echo $snapshots | awk '{print $1}')
     echo "Exporting snapshot: $image@$first_snapshot"
     rbd -p "$pool" export "$image"@"$first_snapshot" - | \
-      pigz -c -4 | \
+      pigz -c --best | \
       ssh root@"$remote" "pigz -cd | rbd --dest-pool '$pool' import - '$dest_image'"
 
     echo "Creating snapshot on $remote: $dest_image@$first_snapshot"
@@ -81,7 +81,7 @@ function export_rbd_image() {
       for snap in $remaining_snapshots; do
         echo "Exporting snapshot: $image@$current"
         rbd -p "$pool" export-diff --from-snap "$current" "$image"@"$snap" - | \
-          pigz -c -4 | \
+          pigz -c --best | \
           ssh root@"$remote" "pigz -cd | rbd -p '$pool' import-diff - '$dest_image'" 
         current=$snap
       done
@@ -97,7 +97,7 @@ function sync_rbd_diffs() {
 
   # Create new snapshot to capture differences and import
   rbd -p "$pool" export-diff --from-snap "$current_snapshot" "$image"@"$sync_snapshot" - | \
-    pigz -c -4 | \
+    pigz -c --best | \
     ssh root@"$remote" "pigz -cd | rbd -p '$pool' import-diff - '$dest_image'"
 }
 
