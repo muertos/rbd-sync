@@ -55,10 +55,9 @@ image=$1
 dest_image=$2 
 pool=$3
 remote=$4
-current_snapshot=snap-1
-sync_snapshot=snap-2
 
 function export_rbd_image() {
+  current_snapshot=snap-$(date +%s)
   echo "Exporting RBD image: $image"
   echo "Creating snapshot: $image@$current_snapshot"
   rbd snap create -p "$pool" "$image@$current_snapshot"
@@ -91,6 +90,7 @@ function export_rbd_image() {
 }
 
 function sync_rbd_diffs() {
+  sync_snapshot=snap-sync-$(date +%s)
   echo "Syncing RBD image differences"
   echo "Creating snapshot: $image@$sync_snapshot"
   rbd snap create -p "$pool" "$image@$sync_snapshot"
