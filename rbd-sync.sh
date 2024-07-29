@@ -14,7 +14,7 @@ help_message="
 RBD Image Migration and Synchronization Script
 
 Usage:
-  $0 --flag <source_image_name> <destination_image_name> <pool> <remote_host>
+  $0 --flag <cpu-cores> <source_image_name> <destination_image_name> <pool> <remote_host>
 
 --export:  Performs a full export of the source image to the destination.
 --sync:    Synchronizes the changes (using snapshots) between the source and destination.
@@ -51,11 +51,11 @@ case "$1" in
     ;;
 esac
 
-image=$1 
-dest_image=$2 
-pool=$3
-remote=$4
-cores=$5
+cores=$1
+image=$2 
+dest_image=$3 
+pool=$4
+remote=$5
 current_snapshot=snap-1
 
 function export_rbd_image() {
