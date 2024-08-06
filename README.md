@@ -1,5 +1,5 @@
 # RBD Sync
-Migrates or synchronizes RBD images, including snapshots, between two Ceph clusters for a specific pool.
+Migrates or synchronizes RBD images, including snapshots, between two Ceph clusters for a specific pool. Use-case of this tool is for performing a migration of VMs from one OpenStack cloud backed by Ceph to another.
 - `--export`: Snapshots source image and exports all snapshots of image into destination.
 - `--sync`: Transfers only the differences between the source and destination images. Will fail if `--export` has not been used initially.
 
