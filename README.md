@@ -22,9 +22,9 @@ Before using this tool, ensure you:
 You will need the RBD source image name, the destination RBD image name, and the pool name from which the image is being migrated.
 
 ```sh
-# Export and import an image
-./rbd-export.sh --export <source_volume_name> <destination_volume_name> <pool> <remote_host>
+# Export and import an image using 4 CPU cores
+./rbd-export.sh --export 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
 
 # Sync differences of an image
-./rbd-export.sh --sync <source_volume_name> <destination_volume_name> <pool> <remote_host>
+./rbd-export.sh --sync 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
 ```

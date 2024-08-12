@@ -7,21 +7,15 @@
 #     - Sync: Transfers only the differences between the source and destination images.
 #
 # Prerequisites:
-#   Destination image created with Cinder of same size as original
-#   The RBD image associated with the destination image must be deleted
+#   Destination volume created with Cinder of same size as original
+#   The RBD image associated with the destination volume must be deleted
 
 help_message="
-RBD Image Migration and Synchronization Script
-
 Usage:
-  $0 --flag <cpu-cores> <source_image_name> <destination_image_name> <pool> <remote_host>
+  $0 --export|--sync <cpu-cores> <source_image_name> <destination_image_name> <pool> <remote_host>
 
 --export:  Performs a full export of the source image to the destination.
 --sync:    Synchronizes the changes (using snapshots) between the source and destination.
-
-Prerequisites:
-  Destination image created with Cinder of same size as original
-  The RBD image associated with the destination image must be deleted
 "
 
 show_help() {
@@ -45,15 +39,14 @@ case "$1" in
     exit 0
     ;;
   *)
-    echo "Invalid flag: $1" >&2
     show_help
     exit 1
     ;;
 esac
 
 cores=$1
-image=$2 
-dest_image=$3 
+image=$2
+dest_image=$3
 pool=$4
 remote=$5
 current_snapshot=snap-1
