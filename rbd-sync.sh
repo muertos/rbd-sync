@@ -61,9 +61,8 @@ function export_rbd_image() {
   if [[ -n $snapshots ]]; then
     first_snapshot=$(echo $snapshots | awk '{print $1}')
     echo "Exporting snapshot: $image@$first_snapshot"
-    taskset -c 0-$cores \
-      rbd -p "$pool" export "$image"@"$first_snapshot" - | \
-      pigz -c --fast | \
+    rbd -p "$pool" export "$image"@"$first_snapshot" - | \
+      pigz -c --fast -p "$cores" | \
       ssh root@"$remote" "pigz -cd | rbd --dest-pool '$pool' import - '$dest_image'"
 
     echo "Creating snapshot on $remote: $dest_image@$first_snapshot"
@@ -75,10 +74,9 @@ function export_rbd_image() {
     if [[ -n $remaining_snapshots ]]; then
       for snap in $remaining_snapshots; do
         echo "Exporting snapshot: $image@$current"
-        taskset -c 0-$cores \
-          rbd -p "$pool" export-diff --from-snap "$current" "$image"@"$snap" - | \
-          pigz -c --fast | \
-          ssh root@"$remote" "pigz -cd | rbd -p '$pool' import-diff - '$dest_image'" 
+        rbd -p "$pool" export-diff --from-snap "$current" "$image"@"$snap" - | \
+          pigz -c --fast -p "$cores" | \
+          ssh root@"$remote" "pigz -cd | rbd -p '$pool' import-diff - '$dest_image'"
         current=$snap
       done
     fi
@@ -92,9 +90,8 @@ function sync_rbd_diffs() {
   rbd snap create -p "$pool" "$image@$sync_snapshot"
 
   # Create new snapshot to capture differences and import
-  taskset -c 0-$cores \
-    rbd -p "$pool" export-diff --from-snap "$current_snapshot" "$image"@"$sync_snapshot" - | \
-    pigz -c --fast | \
+  rbd -p "$pool" export-diff --from-snap "$current_snapshot" "$image"@"$sync_snapshot" - | \
+    pigz -c --fast -p "$cores" | \
     ssh root@"$remote" "pigz -cd | rbd -p '$pool' import-diff - '$dest_image'"
 }
 
