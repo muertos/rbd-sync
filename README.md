@@ -23,8 +23,8 @@ You will need the RBD source image name, the destination RBD image name, and the
 
 ```sh
 # Export and import an image using 4 CPU cores
-./rbd-export.sh --export 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
+./rbd-sync.sh --export 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
 
 # Sync differences of an image
-./rbd-export.sh --sync 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
+./rbd-sync.sh --sync 4 <source_volume_name> <destination_volume_name> <pool> <remote_host>
 ```
